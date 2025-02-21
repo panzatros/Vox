@@ -85,6 +85,8 @@ public class Scanner {
                 if (match('/')) {
                     // A comment goes until the end of the line.
                     while (peek() != '\n' && !isAtEnd()) advance();
+                } else if (match('*')) {
+                    codeBlock();
                 } else {
                     addToken(SLASH);
                 }
@@ -97,7 +99,7 @@ public class Scanner {
             case '\n':
                 line++;
                 break;
-            case '"': string_found(); break;
+            case '"': stringFound(); break;
             default:
                 if(isDigit(c)){
                     number();
@@ -130,7 +132,6 @@ public class Scanner {
         TokenType type = keywords.get(text);
         if (type == null) addToken(IDENTIFIER);
         addToken(type);
-
 
 
     }
@@ -180,7 +181,28 @@ public class Scanner {
         return true;
     }
 
-    private void string_found(){
+    private void codeBlock() {
+        boolean codeBloFinnish = false;
+
+        while (peek() != '*' && peekNext() != '/' && !isAtEnd()) {
+            if (peek() == '\n') line++;
+            advance();
+
+            codeBloFinnish = true;
+        }
+
+        while (peek()!='\n' && !isAtEnd()) {
+            if (isAlphaNumeric(peek())) break;
+            advance();
+        }
+
+        if (isAtEnd() && !codeBloFinnish) {
+            Vox.error(line, "incomplete block of code at the end of document");
+            return;
+        }
+    }
+
+    private void stringFound(){
         while (peek() != '"' && !isAtEnd()){
             if (peek() == '\n') line++;
             advance();
