@@ -1,6 +1,9 @@
 package com.interpreter.vox;
 
+//explicacion del codigo en pagina 63 del manual IMPORTANTE
+
 public class Expr {
+
     abstract class Binary extends Expr {
         Binary(Expr left, Token operator, Expr right) {
             this.left = left;
@@ -20,6 +23,7 @@ public class Expr {
 
         final Expr expression;
     }
+
     static class Literal extends Expr {
         Literal(Object value) {
             this.value = value;
@@ -27,6 +31,7 @@ public class Expr {
 
         final Object value;
     }
+
     static class Unary extends Expr {
         Unary(Token operator, Expr right) {
             this.operator = operator;
