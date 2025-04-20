@@ -47,9 +47,13 @@ public class Vox {
     private static void run(String source) {
         Scanner scanner = new Scanner(source);
         List<Token> tokens = scanner.scanTokens();
-        for (Token token : tokens) {
-            System.out.println(token);
-        }
+        var parser = new Parser(tokens);
+        Expr expr = parser.parse();
+
+        //stop in case of an error
+        if (hadError) return;
+
+        System.out.println(new AstPrinter().print(expr));
     }
 
     //error handling
